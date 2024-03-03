@@ -16,7 +16,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/backgr"
-        android:text="@string/who_play_button_text"
+        android:text="@string/who_play_text"
         android:textAlignment="center"
         android:textColor="@color/buttons"
         android:textSize="30sp"
