@@ -96,23 +96,22 @@ class GameActivity : AppCompatActivity() {
         if(revolver[curBullet]){
             players.removeAt(curPlayer)
             playersViewArray.removeAt(curPlayer)
-            
-            logsArray.add("Игрок №${curPlayer+1} умер")
-            logsArray.add("Револьвер перезарядился")
+
+            logsArray.add(0, "Игрок №${curPlayer+1} умер")
+            logsArray.add(0, "Револьвер перезарядился")
             revolver.fill(false) // заполняет массив значениями false
             revolver[revolver.indices.random()] = true // устанавливает значение true для нового случайного элемента
             Toast.makeText(this, "Началась новая игра", Toast.LENGTH_SHORT).show()
             curBullet = 0
         }
         else{
-            logsArray.add("Игроку №${curPlayer+1} повезло")
-            curBullet++
+            logsArray.add(0,"Игроку №${players[curPlayer].number} повезло")
+            curBullet = (curBullet + 1) % revolver.size
+            curPlayer = (curPlayer + 1) % players.size
         }
-        curPlayer++
+
          println(curPlayer)
         updateAllLists()
         updateAllTexts(players[curPlayer])
     }
-
-
 }
