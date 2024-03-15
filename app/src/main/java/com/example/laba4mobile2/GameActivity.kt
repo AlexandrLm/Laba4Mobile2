@@ -68,7 +68,7 @@ class GameActivity : AppCompatActivity() {
         updateAllTexts(players[curPlayer]) // Кто сейчас выбирает (Сначала нулевой игрок)
     }
 
-    fun click (v : View){ // переход к текущему играющему игроку )пока что не используется)
+    fun click (v : View){ // переход к текущему играющему игроку (пока что не используется)
         var i = 0
         listView.setSelection(i) // это может быть полезно
         i += 1
@@ -94,10 +94,14 @@ class GameActivity : AppCompatActivity() {
 
     fun shootButtonPress(v : View){
         if(revolver[curBullet]){
-            players.removeAt(curPlayer)
             playersViewArray.removeAt(curPlayer)
-
-            logsArray.add(0, "Игрок №${curPlayer+1} умер")
+            logsArray.add(0, "Игрок №${players[curPlayer].number} умер")
+            players.removeAt(curPlayer)
+            if(players.size == 1){
+                win()
+                updateAllLists()
+                return
+            }
             logsArray.add(0, "Револьвер перезарядился")
             revolver.fill(false) // заполняет массив значениями false
             revolver[revolver.indices.random()] = true // устанавливает значение true для нового случайного элемента
@@ -110,8 +114,15 @@ class GameActivity : AppCompatActivity() {
             curPlayer = (curPlayer + 1) % players.size
         }
 
-         println(curPlayer)
+        if(curPlayer == players.size)
+            curPlayer = (curPlayer + 1) % players.size
+        println(curPlayer)
         updateAllLists()
         updateAllTexts(players[curPlayer])
+
+    }
+    fun win(){
+        Toast.makeText(this, "Конец игры", Toast.LENGTH_SHORT).show()
+        logsArray.add(0, "Выиграл игрок ${players[0].number}")
     }
 }
