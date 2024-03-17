@@ -37,10 +37,7 @@ class MainActivity : AppCompatActivity() {
             R.id.button7 -> settings.numberOfPlayers = 7
         }
         for (n in buttons){
-            if (n.id == v.id)
-                n.isActivated = true
-            else
-                n.isActivated = false
+            n.isActivated = n.id == v.id
         }
     }
     fun startButtonPress(v : View){

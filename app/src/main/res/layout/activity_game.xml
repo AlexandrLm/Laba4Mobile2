@@ -68,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:backgroundTint="@color/button_selector"
+            android:onClick="rollButtonPress"
             android:text="@string/roll_button_text"
             android:textAlignment="center"
             android:textColor="@color/font_on_button" />
@@ -78,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:backgroundTint="@color/button_selector"
+            android:onClick="skipButtonPress"
             android:text="@string/skip_button_text"
             android:textAlignment="center"
             android:textColor="@color/font_on_button" />

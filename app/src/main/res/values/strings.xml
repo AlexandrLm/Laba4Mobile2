@@ -5,4 +5,5 @@
     <string name="roll_button_text">Прокрутить (%1$s)</string>
     <string name="skip_button_text">Пропустить ход (%1$s)</string>
     <string name="who_play_text">Выбирает игрок №%1$s</string>
+    <string name="who_win_text">Победил игрок №%1$s</string>
 </resources>

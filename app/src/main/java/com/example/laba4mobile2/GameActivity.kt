@@ -1,19 +1,15 @@
 package com.example.laba4mobile2
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
-import kotlin.math.log
 
 class GameActivity : AppCompatActivity() {
     private lateinit var listView : ListView
@@ -56,27 +52,28 @@ class GameActivity : AppCompatActivity() {
         }
 
         val adapter = ArrayAdapter(this, R.layout.list_item, playersViewArray) // Создаем адаптер
-        listView.choiceMode = ListView.CHOICE_MODE_SINGLE
+        //listView.choiceMode = ListView.CHOICE_MODE_SINGLE // Нужно для того что бы можно было кликать на элементы списка
         listView.adapter = adapter
 
-        logsArray.add("Игра началась с ${players.size} игроками") // Первый лог игры
+        logsArray.add("В револьвере 6 патронов") // Первый лог игры
+        logsArray.add("Игра началась с ${players.size} игроками")
 
         val adapter1 = ArrayAdapter(this, R.layout.list_item, logsArray) // Создаем адаптер
-        gameLogs.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+        //gameLogs.choiceMode = ListView.CHOICE_MODE_MULTIPLE // Нужно для того что бы можно было кликать на элементы списка
         gameLogs.adapter = adapter1
 
         updateAllTexts(players[curPlayer]) // Кто сейчас выбирает (Сначала нулевой игрок)
     }
 
-    fun click (v : View){ // переход к текущему играющему игроку (пока что не используется)
-        var i = 0
-        listView.setSelection(i) // это может быть полезно
-        i += 1
-        if (i > 2)
-            i = 0
-        listView.smoothScrollToPosition(listView.selectedItemPosition) // это может быть полезно
-
-    }
+//    fun click (v : View){ // переход к текущему играющему игроку (пока что не используется)
+//        var i = 0
+//        listView.setSelection(i) // это может быть полезно
+//        i += 1
+//        if (i > 2)
+//            i = 0
+//        listView.smoothScrollToPosition(listView.selectedItemPosition) // это может быть полезно
+//
+//    }
 
     private fun updateAllLists(){ // Обновляет все списки (логи, текущие игроки)
         val adapter = ArrayAdapter(this, R.layout.list_item, playersViewArray)
@@ -97,14 +94,16 @@ class GameActivity : AppCompatActivity() {
             playersViewArray.removeAt(curPlayer)
             logsArray.add(0, "Игрок №${players[curPlayer].number} умер")
             players.removeAt(curPlayer)
-            if(players.size == 1){
+
+            if(players.size == 1){ //Если остался один игрок
                 win()
-                updateAllLists()
                 return
             }
+
             logsArray.add(0, "Револьвер перезарядился")
             revolver.fill(false) // заполняет массив значениями false
             revolver[revolver.indices.random()] = true // устанавливает значение true для нового случайного элемента
+
             Toast.makeText(this, "Началась новая игра", Toast.LENGTH_SHORT).show()
             curBullet = 0
         }
@@ -121,8 +120,33 @@ class GameActivity : AppCompatActivity() {
         updateAllTexts(players[curPlayer])
 
     }
-    fun win(){
-        Toast.makeText(this, "Конец игры", Toast.LENGTH_SHORT).show()
-        logsArray.add(0, "Выиграл игрок ${players[0].number}")
+    fun skipButtonPress(v : View){
+        if(players[curPlayer].skips > 0){
+            players[curPlayer].skips--
+            logsArray.add(0, "Игрок №${players[curPlayer].number} пропускает ход")
+            curPlayer = (curPlayer + 1) % players.size
+            updateAllLists()
+            updateAllTexts(players[curPlayer])
+        }
+        else
+            Toast.makeText(this, "Нет пропусков", Toast.LENGTH_SHORT).show()
+    }
+    fun rollButtonPress(v : View){
+        if (players[curPlayer].spins > 0) {
+            logsArray.add(0, "Револьвер перезарядился")
+            revolver.fill(false) // заполняет массив значениями false
+            revolver[revolver.indices.random()] =
+                true // устанавливает значение true для нового случайного элемента
+            players[curPlayer].spins--
+            updateAllLists()
+            updateAllTexts(players[curPlayer])
+        }
+        else
+            Toast.makeText(this, "Нет прокруток", Toast.LENGTH_SHORT).show()
+    }
+    private fun win(){
+        val intent = Intent(this, WinActivity::class.java)
+        intent.putExtra("winPlayer", players[0].number)
+        startActivity(intent)
     }
 }
